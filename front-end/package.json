@@ -1,0 +1,11 @@
+{
+  "name": "ccs811_front-end",
+  "version": "1.0.0",
+  "description": "Draw ccs811 data in a chart",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Georgian Stan",
+  "license": "ISC"
+}
