@@ -27,11 +27,3 @@ schedule.every(10).seconds.do(save_data)
 
 while(True):
     schedule.run_pending()
-# result = coll.insert_one({
-# "eco2":'asfd'
-# })
-# get default database
-# todos = db['todos']
-# cursor = todos.find()
-# for doc in cursor:
-#     print(doc['todo_body'])
