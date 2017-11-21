@@ -26,7 +26,7 @@ bus = smbus.SMBus(1)
 address = 0x5b
 
 #file where the results will be printed
-file = open('sensor_data.txt','a')
+file = open('data_log.txt','a')
 
 def get_status():
     bus.write_byte(address,0x00)
@@ -65,7 +65,8 @@ def print_data(eCO2,TVOC,status):
     line_separator = "------------------------------------------"
     data_array = [[line_separator,"",""],[date_str,'',""],["eC02","TVOC","status"],[str(eCO2) + 'ppm' ,str(TVOC) + 'ppb',str(status)]]
     for row in data_array:
-	   print("{: >10} {: >10} {: >10}\n".format(*row))
+        file.write("{: >10} {: >10} {: >10}\n".format(*row))
+	print("{: >10} {: >10} {: >10}\n".format(*row))
 
 def save_data(eCO2,TVOC):
     #post data in the collection

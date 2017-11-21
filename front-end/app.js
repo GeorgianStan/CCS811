@@ -15,7 +15,7 @@
 
   const index = require('./routes/index.js') //routes
 
-  const socket = require('./socket/socket.js')(io) //socket
+
 
   const Db = require('mongodb').Db,
         MongoClient = require('mongodb').MongoClient;
@@ -27,7 +27,7 @@
     if(err) throw err
     console.log('Connection has been made to mLab')
     db = database;
-
+      const socket = require('./socket/socket.js')(io,db) //socket
     //Start the application after the database connection is ready
     //===================================
       server.listen(port,function(req){
@@ -37,9 +37,7 @@
   })
 
 
-  // db.collection('data').find({},function(err,res){
-  //   console.log(res)
-  // })
+
 // VIEW ENGINE
 // ==============================================
   app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}));
@@ -57,25 +55,3 @@
 // routes setup
 // ==============================================
   app.use('/',index);
-
-
-
-
-
-  // io.on('connection',function(socket){
-  //   console.log('Socket connection made')
-  //
-  //   socket.on('get_sensor_data',function(){
-  //     db.collection('data').find({},function(err,docs){
-  //       docs.each(function(err, doc) {
-  //        if(doc)
-  //          console.log(doc);
-  //
-  //   })
-  //     })
-  //   })
-  //   socket.on('disconnect',function(){
-  //     console.log('disconnected')
-  //   });
-  //
-  // });

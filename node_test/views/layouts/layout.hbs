@@ -7,15 +7,11 @@
     <title>{{ title }}</title>
 
     <!-- lato font -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet"> -->
     <!-- font awsome font -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> -->
     <!-- styles -->
-    <!-- <link rel='stylesheet'  href='/style/general.css' />
-    <link rel='stylesheet'  href='/style/authenticate.css' />
-    <link rel='stylesheet'  href='/style/signin.css' />
-    <link rel='stylesheet'  href='/style/signup.css' />
-    <link rel='stylesheet'  href='/style/signupfail.css' /> -->
+
 
     <!-- SOCKET IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
@@ -25,20 +21,15 @@
       integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
       crossorigin="anonymous">
     </script>
-    <!-- Moment js -->
+    <!-- Moment js for date format-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    
+
     <!-- Chart -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
 </head>
 <body>
     {{{ body }}}
-
-
-
-    <!-- main of the application -->
-    <!-- <script  type="text/javascript" src="/javascript/app.js"></script> -->
 
     {{#each scripts}}
       <script src={{script}}></script>

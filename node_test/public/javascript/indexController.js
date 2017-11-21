@@ -1,6 +1,5 @@
 let socket = io();
 var ctx = document.getElementById("myChart");
-
 var myChart = new Chart(ctx, {
     type: 'line',
     responsive:true,
@@ -65,9 +64,7 @@ var myChart = new Chart(ctx, {
 // ==============================================
 function addData(chart, label, eCO2,TVOC) {
   chart.data.labels.push(label);
-  // chart.data.datasets.forEach((dataset) => {
-  //     dataset.data.push(data);
-  // });
+
   chart.data.datasets[0].data.push(eCO2)
   chart.data.datasets[1].data.push(TVOC)
 
@@ -83,29 +80,25 @@ function removeData(chart) {
 }
 
 
-//
-// add_more_data()
-
 // get sensor data
 // ==============================================
   let data_interval
-  socket.emit('get_sensor_data')
   socket.on('sensor_data',function(sensor_data){
     console.log(sensor_data)
-    $("#no_measurement_hint").attr('hidden','true')
-
-      let mesurement_time = new Date(sensor_data.time).getHours()
-                            + ' ' +
-                            new Date(sensor_data.time).getMinutes()
-                            + ' ' +
-                            new Date(sensor_data.time).getSeconds()
-
-      addData(myChart,mesurement_time,sensor_data.eCO2,sensor_data.TVOC)
-      if(myChart.data.labels.length > 20){
-        removeData(myChart)
-      }
+    // $("#no_measurement_hint").attr('hidden','true')
+      //
+      // let mesurement_time = new Date(sensor_data.time).getHours()
+      //                       + ' ' +
+      //                       new Date(sensor_data.time).getMinutes()
+      //                       + ' ' +
+      //                       new Date(sensor_data.time).getSeconds()
+      //
+      // addData(myChart,mesurement_time,sensor_data.eCO2,sensor_data.TVOC)
+      // if(myChart.data.labels.length > 20){
+      //   removeData(myChart)
+      // }
   })
-  socket.on('no_measurement',function(){
-    // alert('no new measurement since the last one')
-    $("#no_measurement_hint").removeAttr('hidden')
-  })
+  // socket.on('no_measurement',function(){
+  //   // alert('no new measurement since the last one')
+  //   $("#no_measurement_hint").removeAttr('hidden')
+  // })
