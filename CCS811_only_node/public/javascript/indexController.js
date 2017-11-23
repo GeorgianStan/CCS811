@@ -1,6 +1,10 @@
+//connect socket to the server
 let socket = io();
-var ctx = document.getElementById("myChart");
-var myChart = new Chart(ctx, {
+
+//chart settings
+////////////////////////////////////////////////////
+let ctx = document.getElementById("myChart");
+let myChart = new Chart(ctx, {
     type: 'line',
     responsive:true,
     maintainAspectRatio:true,
@@ -82,23 +86,11 @@ function removeData(chart) {
 
 // get sensor data
 // ==============================================
-  let data_interval
   socket.on('sensor_data',function(sensor_data){
+    console.log('new data recived')
     console.log(sensor_data)
-    // $("#no_measurement_hint").attr('hidden','true')
-      //
-      // let mesurement_time = new Date(sensor_data.time).getHours()
-      //                       + ' ' +
-      //                       new Date(sensor_data.time).getMinutes()
-      //                       + ' ' +
-      //                       new Date(sensor_data.time).getSeconds()
-      //
-      // addData(myChart,mesurement_time,sensor_data.eCO2,sensor_data.TVOC)
-      // if(myChart.data.labels.length > 20){
-      //   removeData(myChart)
-      // }
+      addData(myChart,sensor_data.time,sensor_data.eCO2,sensor_data.TVOC)
+      if(myChart.data.labels.length > 20){
+        removeData(myChart)
+      }
   })
-  // socket.on('no_measurement',function(){
-  //   // alert('no new measurement since the last one')
-  //   $("#no_measurement_hint").removeAttr('hidden')
-  // })

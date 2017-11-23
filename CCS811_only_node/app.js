@@ -8,7 +8,7 @@
   const port = process.env.PORT || 8080 //app port
 
   const path = require('path')
-  const hbs = require('express-handlebars'); //require hbs for template engine
+  const hbs = require('express-handlebars'); //require hbs - template engine
 
   const i2c = require('i2c-bus');
   const i2c1 = i2c.openSync(1);  //set ut the i2c 1
@@ -17,6 +17,7 @@
 
 // VIEW ENGINE
 // ==============================================
+  //set hbs as template engine and default layout as layout.hbs from /views/layouts
   app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}));
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'hbs');
@@ -48,7 +49,7 @@
       }
       if (options.exit){
         console.log(' App stoped: now it will reset the sensor and close the i2c ')
-        // sensor.reset_sensor()
+        sensor.reset_sensor()
         i2c1.closeSync()
         process.exit();
       }
@@ -79,12 +80,7 @@
       sensor.set_driver_mode(1) //set driver mode to one second(1) or ten seconds(10)
 
       const socket = require('./socket/socket.js')(io,sensor) //socket
-      console.log('socket ')
-      // setInterval(function(){   //each 1000ms or 10000ms(1 or 10 seconds as set at driver mode) read data
-      //   sensor.read_data().then(function(data_buff){
-      //     sensor.console_print_data() //print data in console
-      //   })
-      // },1000)
+
 
     } catch(e){       // catch errors
         i2c1.closeSync() //close the file

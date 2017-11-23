@@ -1,9 +1,11 @@
 
+const fs = require('fs') // require fs in order to print data in a log file
+
 let i2c = require('i2c-bus'),
     i2c1 = i2c.openSync(1);
 
 function CCS811(){
-  //set sensor addres and registers
+  //set sensor address and registers
   this.SLAVE_ADDR = 0x5b;
   this.STATUS_REG = 0x00;
   this.MEAS_MODE_REG = 0x01;
@@ -25,14 +27,29 @@ function CCS811(){
      this.name = 'Sensor Exception';
   }
 
-  //print eCO2 and TVOC in console
-  this.console_print_data = function(){
-    console.log('========================')
-    console.log('Time:'+ new Date().getHours() + ' ' + new Date().getMinutes() + ' ' + new Date().getSeconds())
-    console.log('eCO2:',this.eCO2)
-    console.log('TVOC:',this.TVOC)
-    console.log('status:',this.status)
+  //print eCO2  TVOC and time in console and a log file
+  this.print_data = function(console_print,log_file){
+    let header = '========================\n';
+    let time = 'Time:'+ new Date().getHours() + ' ' + new Date().getMinutes() + ' ' + new Date().getSeconds() + '\n';
+    let eCO2 = 'eCO2: ' + this.eCO2 + '\n';
+    let TVOC = 'TVOC: ' + this.TVOC + '\n';
+    let status = 'status: ' + this.status + '\n';
+    let text = header + time + eCO2 + TVOC + status
+
+    if(console_print == true) console.log(text)
+
+    if(log_file != undefined) fs.appendFileSync(log_file, text)
+
   };
+
+  //return eCO2 TVOC and time
+  this.get_data = function(){
+    let time = new Date().getHours() + ' ' + new Date().getMinutes() + ' ' + new Date().getSeconds(),
+        eCO2 = this.eCO2,
+        TVOC = this.TVOC,
+        data = {time,eCO2,TVOC}
+    return data;
+  }
 
   //return eCO2
   this.get_eCO2 = function(){
@@ -54,7 +71,7 @@ function CCS811(){
     i2c1.sendByteSync(this.SLAVE_ADDR, this.HW_ID_REG);
 
     let hw_id = i2c1.receiveByteSync(this.SLAVE_ADDR);
-    if(!(hw_id & 0x81)) throw new this.sensor_exception('Invalid sensor id(is not a CCS811):');
+    if(!(hw_id == 0x81)) throw new this.sensor_exception('Invalid sensor id(is not a CCS811):');
     else console.log('Sensor is a CCS811')
   };
 
@@ -66,16 +83,15 @@ function CCS811(){
   };
 
   this.check_app_valid = function(){
-    if(!(this.get_status() & 0x10)) throw new this.sensor_exception('App not valid');
+    if(!(this.get_status() == 0x10)) throw new this.sensor_exception('App not valid');
     else console.log('App is valid')
-  }
+  };
 
   //set sensor in aplication mode
   this.start = function(){
     i2c1.sendByteSync(this.SLAVE_ADDR, this.APP_START_REG);
-    if(!(this.get_status() & 0x90 )) throw new this.sensor_exception('Sensor could not start');
+    if(!(this.get_status() == 0x90 )) throw new this.sensor_exception('Sensor could not start');
     else console.log('Sensor is in application mode and ready to take ADC measurements')
-
   };
 
   //set driver mode
@@ -97,16 +113,14 @@ function CCS811(){
   };
 
   this.read_data = function(){
-    return new Promise( (resolve,reject) => {
-      while(!(this.get_status() & 0x8)) // wait for data in ALG RESULT DATA
+      while(!(this.get_status() & 0x8)) // wait for data in ALG RESULT DATA (wait the register to be at 0x98 instead of 0x90)
       i2c1.sendByteSync(this.SLAVE_ADDR, this.ALG_RESULT_DATA)
       i2c1.readI2cBlockSync(this.SLAVE_ADDR, this.ALG_RESULT_DATA, 5, this.sensor_data_buff)
 
       this.eCO2 = this.sensor_data_buff[0] << 8 | this.sensor_data_buff[1]
       this.TVOC = this.sensor_data_buff[2] << 8 | this.sensor_data_buff[3]
       this.status = this.sensor_data_buff[4];
-      resolve(this.sensor_data_buff)
-    });
+      return this.sensor_data_buff;
   };
 
   // reset sensor to boot mode
