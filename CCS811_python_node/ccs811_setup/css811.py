@@ -1,3 +1,5 @@
+# BASE SETUP ( require modules)
+# ==============================================
 import smbus
 import time
 import sys
@@ -58,7 +60,7 @@ def get_TVOC(TVOC_high_byte,TVOC_low_byte):
     TVOC = combine_hex(TVOC_high_byte,TVOC_low_byte)
     return TVOC
 
-#Pretty prin the data in a file
+#Pretty prin the data in a file and console
 #/////////////////
 def print_data(eCO2,TVOC,status):
     date_str = str("Sample data on " + str(time.strftime("%Y-%m-%d %H:%M:%S")))
@@ -97,7 +99,6 @@ def read_routine():
 #main
 #/////////////////
 def run():
-    #read id and compare it to 0x81(1000 0001)
     hw_id = get_hw_id()
     if(hw_id is not int('0x81',16)):
         print('hw id invalid')
@@ -125,8 +126,9 @@ def run():
     # Set drive mode to x10 = measurements every second
     bus.write_byte_data(address, 0x01, 0x10)
     print('Sensor is reading data')
-    time.sleep(1)
+    time.sleep(1) #wait one secont so the sensor read data
 
+    # schedule the read routine to one second
     schedule.every(1).seconds.do(read_routine)
 
     while(True):
